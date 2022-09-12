@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.source.mapper.SouStateListMapper">
+    
+    <resultMap type="SouStateList" id="SourceStateListResult">
+    	<id     property="id"      column="id"      />
+        <result property="state"    column="state1"    />
+        <result property="price"     column="price"     />
+    </resultMap>
+    <!--    查询州列表-->
+    <select id="selectStateList" resultMap="SourceStateListResult">
+        select * from source group by state1
+    </select>
+    
+    <!-- 查询全部资源 -->
+	<select id="selectAllSource" resultMap="SourceStateListResult">
+        select * from source
+	</select>
+<!--    按州查询资源列表-->
+    <select id="selectSourceByState" resultMap="SourceStateListResult">
+        select * from source where state1 = #{state}
+    </select>
+</mapper>
