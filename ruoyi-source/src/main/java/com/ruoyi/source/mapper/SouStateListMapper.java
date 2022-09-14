@@ -17,7 +17,6 @@ public interface SouStateListMapper {
      */
 
     List<SouStateList> selectStateList();
-
     /**
      * 根查询全部资源列表信息
      *

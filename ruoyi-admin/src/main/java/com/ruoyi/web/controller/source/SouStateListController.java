@@ -45,6 +45,7 @@ public class SouStateListController extends BaseController
     public AjaxResult sources()
     {
         List<SouStateList> sources = soustatelistservice.selectAllSouList();
+        System.err.println("controller: "+AjaxResult.success(sources));
         return AjaxResult.success(sources);
     }
 
@@ -55,7 +56,6 @@ public class SouStateListController extends BaseController
     public AjaxResult getInfo(@PathVariable String State)
     {
         List<SouStateList> statesource = soustatelistservice.selectSouByState(State);
-        System.err.println(AjaxResult.success(statesource).toString());
         return AjaxResult.success(statesource);
     }
 }

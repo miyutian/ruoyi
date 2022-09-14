@@ -43,7 +43,8 @@ public class SouStateList extends BaseEntity
 
     public void setState(String State)
     {
-        this.state = state;
+        this.state = State;
+
     }
 
     public String getPrice()

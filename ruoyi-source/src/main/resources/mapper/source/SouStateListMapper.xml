@@ -6,12 +6,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="SouStateList" id="SourceStateListResult">
     	<id     property="id"      column="id"      />
-        <result property="state"    column="state1"    />
+        <result property="state"    column="state"    />
         <result property="price"     column="price"     />
     </resultMap>
     <!--    查询州列表-->
     <select id="selectStateList" resultMap="SourceStateListResult">
-        select * from source group by state1
+        select * from source group by state
     </select>
     
     <!-- 查询全部资源 -->
@@ -20,6 +20,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 <!--    按州查询资源列表-->
     <select id="selectSourceByState" resultMap="SourceStateListResult">
-        select * from source where state1 = #{state}
+        select * from source where state = #{state}
     </select>
 </mapper>
