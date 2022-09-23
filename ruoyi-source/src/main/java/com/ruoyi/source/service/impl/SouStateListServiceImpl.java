@@ -2,11 +2,13 @@ package com.ruoyi.source.service.impl;
 
 
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.source.domain.SouStateList;
 import com.ruoyi.source.mapper.SouStateListMapper;
 import com.ruoyi.source.service.SouStateListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,7 +33,6 @@ public class SouStateListServiceImpl implements SouStateListService
     public List<SouStateList> selectStateList()
     {
         List<SouStateList> soustatelist = soustatelistMapper.selectStateList();
-        System.out.println(soustatelist.toString());
         return soustatelistMapper.selectStateList();
     }
 
@@ -57,5 +58,51 @@ public class SouStateListServiceImpl implements SouStateListService
     public List<SouStateList> selectSouByState(String State)
     {
         return soustatelistMapper.selectSourceByState(State);
+    }
+
+    /**
+     * 获取id对应的资源
+     * @param  id 州的简写
+     * @return 返回州对应的资源列表
+     */
+    @Override
+    public List<SouStateList> selectSouById(String id)
+    {
+        return soustatelistMapper.selectSouById(Integer.valueOf(id));
+    }
+
+    /**
+     * 根据州名查询资源信息
+     *
+     * @param data 参数键名
+     * @return int
+     */
+    @Override
+    public int updateSource(SouStateList data){ return soustatelistMapper.updateSource(data);}
+
+    /**
+     * 批量删除用户信息
+     *
+     * @param Ids 需要删除的用户ID
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int deleteSourceByIds(Long[] Ids)
+    {
+        return soustatelistMapper.deleteSourceByIds(Ids);
+    }
+
+    /**
+     * 添加用户信息
+     *
+     * @param data 需要删除的用户ID
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int insertSource(SouStateList data)
+    {
+        return soustatelistMapper.insertSource(data);
     }
 }

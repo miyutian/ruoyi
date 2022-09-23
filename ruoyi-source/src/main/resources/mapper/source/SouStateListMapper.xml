@@ -11,15 +11,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
     <!--    查询州列表-->
     <select id="selectStateList" resultMap="SourceStateListResult">
-        select * from source group by state
+        select * from source where status = 1 group by state
     </select>
     
     <!-- 查询全部资源 -->
 	<select id="selectAllSource" resultMap="SourceStateListResult">
-        select * from source
+        select * from source where status = 1
 	</select>
 <!--    按州查询资源列表-->
     <select id="selectSourceByState" resultMap="SourceStateListResult">
-        select * from source where state = #{state}
+        select * from source where status = 1 and state = #{state}
     </select>
+<!--    按id查询资源列表-->
+    <select id="selectSouById" resultMap="SourceStateListResult">
+        select * from source where id = #{id}
+    </select>
+<!--    更新资源-->
+    <update id="updateSource" parameterType="SouStateList">
+        update source
+        <set>
+            <if test="state != null and state != ''">state = #{state},</if>
+            <if test="price != null and price != ''">price = #{price},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="status != null and status!= ''">status = #{status},</if>
+        </set>
+        where id = #{id}
+    </update>
+<!--    按Id删除资源-->
+    <delete id="deleteSourceByIds" parameterType="Long">
+        update source set status = '2' where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+<!--    按Id删除资源-->
+    <insert id="insertSource" parameterType="SouStateList">
+        insert into source(
+        <if test="id != null and id != 0">id,</if>
+        <if test="state != null and state != ''">state,</if>
+        <if test="price != null and price != ''">price,</if>
+        <if test="description != null and description != ''">description,</if>
+        <if test="status != null and status != ''">status</if>
+        )values(
+        <if test="id != null and id != 0">#{id},</if>
+        <if test="state != null and state != ''">#{state},</if>
+        <if test="price != null and price != ''">#{price},</if>
+        <if test="description != null and description != ''">#{description},</if>
+        <if test="status != null and status != ''">#{status}</if>
+        )
+    </insert>
 </mapper>

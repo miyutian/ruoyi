@@ -61,26 +61,26 @@
               v-hasPermi="['system:user:remove']"
             >删除</el-button>
           </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="info"
-              plain
-              icon="el-icon-upload2"
-              size="mini"
-              @click="handleImport"
-              v-hasPermi="['system:user:import']"
-            >导入</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="warning"
-              plain
-              icon="el-icon-download"
-              size="mini"
-              @click="handleExport"
-              v-hasPermi="['system:user:export']"
-            >导出</el-button>
-          </el-col>
+<!--          <el-col :span="1.5">-->
+<!--            <el-button-->
+<!--              type="info"-->
+<!--              plain-->
+<!--              icon="el-icon-upload2"-->
+<!--              size="mini"-->
+<!--              @click="handleImport"-->
+<!--              v-hasPermi="['system:user:import']"-->
+<!--            >导入</el-button>-->
+<!--          </el-col>-->
+<!--          <el-col :span="1.5">-->
+<!--            <el-button-->
+<!--              type="warning"-->
+<!--              plain-->
+<!--              icon="el-icon-download"-->
+<!--              size="mini"-->
+<!--              @click="handleExport"-->
+<!--              v-hasPermi="['system:user:export']"-->
+<!--            >导出</el-button>-->
+<!--          </el-col>-->
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getSources" :columns="columns"></right-toolbar>
         </el-row>
 
@@ -88,20 +88,14 @@
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" key="id" prop="id" v-if="columns[0].visible" width = "60px" />
           <el-table-column label="州" align="center" key="state" prop="state" v-if="columns[1].visible" width = "60px" />
-          <el-table-column label="资源" align="center" key="price" prop="price" v-if="columns[2].visible" />
-          <el-table-column label="状态" align="center" key="status" v-if="columns[3].visible" width = "80px">
+
+<!--            <el-table-column label="资源" align="center" key="price" prop="price" v-if="columns[2].visible" >-->
+          <el-table-column label="资源" align="center" key="price" prop="price" v-if="columns[2].visible">
             <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
+              <a color="blue" @click="openHrefPage(scope.row)">{{scope.row.price}}</a>
             </template>
           </el-table-column>
-          <el-table-column label="跳转" align="center">
-            <el-button><a href="">跳转</a></el-button>
-          </el-table-column>
+
           <el-table-column
             label="操作"
             align="center"
@@ -123,17 +117,6 @@
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['system:user:remove']"
               >删除</el-button>
-              <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
-                <span class="el-dropdown-link">
-                  <i class="el-icon-d-arrow-right el-icon--right"></i>更多
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
-                                    v-hasPermi="['system:user:resetPwd']">重置密码</el-dropdown-item>
-                  <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                                    v-hasPermi="['system:user:edit']">分配角色</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
             </template>
           </el-table-column>
         </el-table>
@@ -150,100 +133,33 @@
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form":model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" maxlength="30" />
+            <el-form-item label="id" prop="id">
+              <el-input v-model="form.id" placeholder="id" maxlength="30" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" />
+            <el-form-item label="state" prop="state">
+              <el-input v-model="form.state"  placeholder="state" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="手机号码" prop="phonenumber">
-              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
+          <el-col >
+            <el-form-item label="source" prop="source">
+              <el-input v-model="form.price" placeholder="source"  />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+          <el-col >
+            <el-form-item label="des" prop="description">
+              <el-input v-model="form.description" placeholder="description" maxlength="500" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户名称" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户名称" maxlength="30" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.userId == undefined" label="用户密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入用户密码" type="password" maxlength="20" show-password/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="用户性别">
-              <el-select v-model="form.sex" placeholder="请选择性别">
-                <el-option
-                  v-for="dict in dict.type.sys_user_sex"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in dict.type.sys_normal_disable"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
-                <el-option
-                  v-for="item in postOptions"
-                  :key="item.postId"
-                  :label="item.postName"
-                  :value="item.postId"
-                  :disabled="item.status == 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择角色">
-                <el-option
-                  v-for="item in roleOptions"
-                  :key="item.roleId"
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  :disabled="item.status == 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="备注">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+          <el-col :span="6">
+            <el-form-item label="status" prop="status">
+              <el-input v-model="form.status" placeholder="status" maxlength="500" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -287,7 +203,7 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus,listStates,listSources,stateSources } from "@/api/system/user";
+import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus,listStates,listSources,stateSources,getsourcebyid,updateSource,delSource,addSource } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import { treeselect } from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
@@ -374,31 +290,13 @@ export default {
       ],
       // 表单校验
       rules: {
-        userName: [
-          { required: true, message: "用户名称不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur' }
+        state: [
+          { required: true, message: "state must be not null", trigger: "blur" },
+          { min: 2, max: 2, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur' }
         ],
-        nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" }
+        price: [
+          { required: true, message: "source must be not null", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "用户密码不能为空", trigger: "blur" },
-          { min: 5, max: 20, message: '用户密码长度必须介于 5 和 20 之间', trigger: 'blur' }
-        ],
-        email: [
-          {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
-          }
-        ],
-        phonenumber: [
-          {
-            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: "blur"
-          }
-        ]
       }
     };
   },
@@ -476,15 +374,9 @@ export default {
       this.handleQuery();
     },
     // 用户状态修改
-    handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
-      this.$modal.confirm('确认要"' + text + '""' + row.userName + '"用户吗？').then(function() {
-        return changeUserStatus(row.userId, row.status);
-      }).then(() => {
-        this.$modal.msgSuccess(text + "成功");
-      }).catch(function() {
-        row.status = row.status === "0" ? "1" : "0";
-      });
+    openHrefPage(row) {
+      let text = row.price;
+      window.open(text);
     },
     // 取消按钮
     cancel() {
@@ -494,18 +386,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        userId: undefined,
-        deptId: undefined,
-        userName: undefined,
-        nickName: undefined,
-        password: undefined,
-        phonenumber: undefined,
-        email: undefined,
-        sex: undefined,
-        status: "0",
-        remark: undefined,
-        postIds: [],
-        roleIds: []
+        id: undefined,
+        state: undefined,
+        description: undefined,
+        status: "1",
+        price: undefined,
       };
       this.resetForm("form");
     },
@@ -522,7 +407,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId);
+      this.ids = selection.map(item => item.id);
       this.single = selection.length != 1;
       this.multiple = !selection.length;
     },
@@ -542,29 +427,20 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.getTreeselect();
       getUser().then(response => {
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
         this.open = true;
         this.title = "添加用户";
-        this.form.password = this.initPassword;
       });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      console.log(row);
       this.reset();
-      this.getTreeselect();
-      const userId = row.userId || this.ids;
-      getUser(userId).then(response => {
-        this.form = response.data;
-        this.postOptions = response.posts;
-        this.roleOptions = response.roles;
-        this.form.postIds = response.postIds;
-        this.form.roleIds = response.roleIds;
+      const id = row.id  || this.ids;;
+      getsourcebyid(id).then(response => {
+        this.form = response.data[0];
         this.open = true;
-        this.title = "修改用户";
-        this.form.password = "";
+        this.title = "修改资源";
       });
     },
     /** 重置密码按钮操作 */
@@ -590,14 +466,15 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.userId != undefined) {
-            updateUser(this.form).then(response => {
+          if (this.form.id != undefined) {
+            console.log(this.form),
+            updateSource(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
-              this.getList();
+              this.getSources();
             });
           } else {
-            addUser(this.form).then(response => {
+            addSource(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -608,11 +485,12 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
-        return delUser(userIds);
+      const Ids = row.id || this.ids;
+      console.log(row.id);
+      this.$modal.confirm('是否确认删除编号为"' + Ids + '"的数据项？').then(function() {
+        return delSource(Ids);
       }).then(() => {
-        this.getList();
+        this.getSources();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },

@@ -36,6 +36,24 @@ export function updateUser(data) {
   })
 }
 
+// 新增资源
+export function addSource(data) {
+  return request({
+    url: '/source',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改资源
+export function updateSource(data) {
+  return request({
+    url: '/source',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除用户
 export function delUser(userId) {
   return request({
@@ -145,6 +163,21 @@ export function stateSources(state) {
   return request({
     url: '/source/statesource/' + state,
     method: 'get',
-    params: querStatesy
+    params: state
+  })
+}
+// 查询资源
+export function getsourcebyid(id) {
+  return request({
+    url: '/source/' + id,
+    method: 'get',
+    params: id
+  })
+}
+// 删除资源地址
+export function delSource(Id) {
+  return request({
+    url: '/source/' + Id,
+    method: 'delete'
   })
 }

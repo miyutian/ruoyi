@@ -4,6 +4,10 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.source.domain.SouStateList;
 import com.ruoyi.source.service.SouStateListService;
 import org.apache.commons.lang3.ArrayUtils;
@@ -45,7 +49,6 @@ public class SouStateListController extends BaseController
     public AjaxResult sources()
     {
         List<SouStateList> sources = soustatelistservice.selectAllSouList();
-        System.err.println("controller: "+AjaxResult.success(sources));
         return AjaxResult.success(sources);
     }
 
@@ -58,4 +61,47 @@ public class SouStateListController extends BaseController
         List<SouStateList> statesource = soustatelistservice.selectSouByState(State);
         return AjaxResult.success(statesource);
     }
+
+    /**
+     * 根据编号获取资源信息
+     */
+    @GetMapping ("/{id}")
+    public AjaxResult getById(@PathVariable String id)
+    {
+        List<SouStateList> idsource = soustatelistservice.selectSouById(id);
+        return AjaxResult.success(idsource);
+    }
+
+    /**
+     * 修改资源
+     */
+    @Log(title = "资源管理123", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@Validated @RequestBody SouStateList source)
+    {
+        return toAjax(soustatelistservice.updateSource(source));
+    }
+
+    /**
+     * 删除资源
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:remove')")
+    @Log(title = "资源管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{Ids}")
+    public AjaxResult remove(@PathVariable Long[] Ids)
+    {
+
+        return toAjax(soustatelistservice.deleteSourceByIds(Ids));
+    }
+
+    /**
+     * 新增资源
+     */
+    @Log(title = "资源管理", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@Validated @RequestBody SouStateList source)
+    {
+        return toAjax(soustatelistservice.insertSource(source));
+    }
+
 }

@@ -29,6 +29,30 @@ public class SouStateList extends BaseEntity
     @Excel(name = "参数键名")
     private String price;
 
+    /** 参数键名 */
+    @Excel(name = "参数键名")
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    /** 参数键名 */
+    @Excel(name = "状态")
+    private int status;
+
     public Long getId() { return id; }
 
     public void setId(Long id)
@@ -63,6 +87,8 @@ public class SouStateList extends BaseEntity
                 "id=" + id +
                 ", state='" + state + '\'' +
                 ", price='" + price + '\'' +
+                ", description='" + description + '\'' +
+                ", status=" + status +
                 '}';
     }
 }
